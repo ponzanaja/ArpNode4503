@@ -14,7 +14,7 @@ const intSpeed = [1, 3, 6, 1, 2, 1, 2, 2, 1, 5]
 const freeMemoryOID = [1,3,6,1,4,1,9,9,48,1,1,1,6,1] // max 512B
 const temparatureOID = [1,3,6,1,4,1,9,9,13,1,3,1,3,1]
 const cpuUsageOID = [1,3,6,1,4,1,9,2,1,57,0]
-const nodeNIP = '10.4.15.1'
+const nodeNIP = '10.9.99.2'
 /* root / root1234 10.4.15.1  192.168.1.254*/ 
 const {exec} = require('child_process')
 
