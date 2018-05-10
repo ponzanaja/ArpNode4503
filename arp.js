@@ -90,6 +90,7 @@ setInterval(() => {
   })
   getMIB('Node4503', date, time)
   sendTemparature().then((result) => {
+    console.log("Temp Text : " + result)
     let newResult = result.replace(/(\r\n|\n|\r)/gm, '')
     let indexOfTemparature = newResult.indexOf('T')
     humanity = newResult.slice(1,indexOfTemparature)
