@@ -14,7 +14,7 @@ const intSpeed = [1, 3, 6, 1, 2, 1, 2, 2, 1, 5]
 const freeMemoryOID = [1,3,6,1,4,1,9,9,48,1,1,1,6,1] // max 512B
 const temparatureOID = [1,3,6,1,4,1,9,9,13,1,3,1,3,1]
 const cpuUsageOID = [1,3,6,1,4,1,9,2,1,57,0]
-const nodeNIP = '10.9.99.2'
+const nodeNIP = '10.4.15.1'
 /* root / root1234 10.4.15.1  192.168.1.254*/ 
 const {exec} = require('child_process')
 
@@ -367,8 +367,8 @@ function getMIB (nodeName, date, time) {
 
     let suminpktU = 0
     let suminpktsErr = 0
-    for (let i = 8; i < 13; i++) {
-      if(i !== 12) {
+    for (let i = 7; i < 12; i++) {
+      if(i !== 11) {
         sumInbound += inbound[i].inbound
         sumOutbound += outbound[i].outbound
         suminpktU += packetinU[i].pktsinu
@@ -419,8 +419,8 @@ function getMIB (nodeName, date, time) {
       time: time
     }
     setTimeout(() => {   
-      let inb =  inbound[64].inbound
-      let outb = outbound[64].outbound 
+      let inb =  inbound[9].inbound
+      let outb = outbound[9].outbound 
       let mainlinkData = {
         in: inb,
         out: outb
