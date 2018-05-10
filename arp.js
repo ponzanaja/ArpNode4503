@@ -11,8 +11,8 @@ const pktsInErrOID = [1, 3, 6, 1, 2, 1, 2, 2, 1, 14]
 const pktsOutErrOID = [1, 3, 6, 1, 2, 1, 2, 2, 1, 14]
 const intNameOID = [1, 3, 6, 1, 2, 1, 2, 2, 1, 2]
 const intSpeed = [1, 3, 6, 1, 2, 1, 2, 2, 1, 5]
-const freeMemoryOID = [1, 3, 6, 1, 4, 1, 9, 2, 1, 8, 0] // max 128MB
-const temparatureOID = [1, 3, 6, 1, 4, 1, 9, 9, 13, 1, 3, 1, 3, 1005]
+const freeMemoryOID = [1,3,6,1,4,1,9,9,48,1,1,1,6,1] // max 512B
+const temparatureOID = [1,3,6,1,4,1,9,9,13,1,3,1,3,1]
 const cpuUsageOID = [1,3,6,1,4,1,9,2,1,57,0]
 const nodeNIP = '10.4.15.1'
 /* root / root1234 10.4.15.1  192.168.1.254*/ 
@@ -77,7 +77,7 @@ setInterval(() => {
   let time = dateFormat(now, 'HH:MM:ss')
   /// //////////////////// Date variable End here ////////////////////////
   showResult()
-  sendtoFirebase('Node1', date, time)
+  sendtoFirebase('Node4503', date, time)
   speedTest().then((result) => {
     let newResult = result.replace(/(\r\n|\n|\r)/gm, '')
     let indexOfdownload = newResult.indexOf('M')
@@ -88,7 +88,7 @@ setInterval(() => {
     download = download.trim()
     upload = upload.trim()
   })
-  getMIB('Node1', date, time)
+  getMIB('Node4503', date, time)
   sendTemparature().then((result) => {
     let newResult = result.replace(/(\r\n|\n|\r)/gm, '')
     let indexOfTemparature = newResult.indexOf('T')
@@ -133,7 +133,7 @@ function getOnline (ip) {
 }
 
 function sendtoFirebase (nodeName, date, time) {
-  let check = db.child('-L46xegEleuKcTnJXDjg')
+  let check = db.child('-L46xegEleuKcTnJXDjA')
   let temparatureData = {
     valueh: humanity,
     valuet: temparature,
@@ -147,17 +147,20 @@ function sendtoFirebase (nodeName, date, time) {
   }
   if (check) {
     if(humanity !== "ron" && temparature !== "Wrong"){
-      firebase.database().ref('db/-L46xegEleuKcTnJXDjg').update({
+      firebase.database().ref('db/-L46xegEleuKcTnJXDjA').update({
         temparature: temparatureData,
       })
     }
-    firebase.database().ref('db/-L46xegEleuKcTnJXDjg').update({
+    firebase.database().ref('db/-L46xegEleuKcTnJXDjA').update({
       ip: ipNow,
-      onlinenow: online,
+      onlinenow: online
+    })
+    firebase.database().ref('alive/-L46xegEleuKcTnJXDjA').update({
+      nodeName:nodeName,
       alive:true,
       alive2:true
     })
-    firebase.database().ref().child('db/-L46xegEleuKcTnJXDjg/speedtest').push(spdtestData)
+    firebase.database().ref().child('db/-L46xegEleuKcTnJXDjA/speedtest').push(spdtestData)
   } else {
     let sendData = {
       node: nodeName,
@@ -364,11 +367,13 @@ function getMIB (nodeName, date, time) {
 
     let suminpktU = 0
     let suminpktsErr = 0
-    for (let i = 63; i < 67; i++) {
-      sumInbound += inbound[i].inbound
-      sumOutbound += outbound[i].outbound
-      suminpktU += packetinU[i].pktsinu
-      suminpktsErr += pktsInErr[i].pktsinerr
+    for (let i = 8; i < 13; i++) {
+      if(i !== 12) {
+        sumInbound += inbound[i].inbound
+        sumOutbound += outbound[i].outbound
+        suminpktU += packetinU[i].pktsinu
+        suminpktsErr += pktsInErr[i].pktsinerr
+      }
     }
     sumInpkts = suminpktU
     if (sumInpkts !== 0) {
@@ -399,9 +404,9 @@ function getMIB (nodeName, date, time) {
     }
   })
 
-  let check = db.child('-L46xegEleuKcTnJXDjg')
+  let check = db.child('-L46xegEleuKcTnJXDjA')
   if (check) {
-    let memoryFree = (memory*100)/128
+    let memoryFree = (memory*100)/512
     let data = {}
     let insertIn = {
       value: sumInbound,
@@ -424,12 +429,12 @@ function getMIB (nodeName, date, time) {
     }, 3000)
 
     setTimeout(() => {
-      firebase.database().ref().child('db/-L46xegEleuKcTnJXDjg/inbound').push(insertIn)
-      firebase.database().ref().child('db/-L46xegEleuKcTnJXDjg/outbound').push(insertOut)
-      firebase.database().ref().child('db/-L46xegEleuKcTnJXDjg/packetloss').set(packetloss)
-      firebase.database().ref().child('db/-L46xegEleuKcTnJXDjg/mainlink').set(data)
-      firebase.database().ref().child('db/-L46xegEleuKcTnJXDjg/cpu').set(cpu)
-      firebase.database().ref().child('db/-L46xegEleuKcTnJXDjg/memory').set(memoryFree)
+      firebase.database().ref().child('db/-L46xegEleuKcTnJXDjA/inbound').push(insertIn)
+      firebase.database().ref().child('db/-L46xegEleuKcTnJXDjA/outbound').push(insertOut)
+      firebase.database().ref().child('db/-L46xegEleuKcTnJXDjA/packetloss').set(packetloss)
+      firebase.database().ref().child('db/-L46xegEleuKcTnJXDjA/mainlink').set(data)
+      firebase.database().ref().child('db/-L46xegEleuKcTnJXDjA/cpu').set(cpu)
+      firebase.database().ref().child('db/-L46xegEleuKcTnJXDjA/memory').set(memoryFree)
     }, 9000)
       
    
