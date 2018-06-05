@@ -431,9 +431,11 @@ function getMIB (nodeName, date, time) {
 
     setTimeout(() => {
       let sumInterface = 0
-      for (let i = 64; i <= 67; i++) {
-         sumInterface += intSpd[i].intSpd/1048576
+      for (let i = 7; i < 12; i++) {
+      if(i !== 11) {
+       sumInterface += intSpd[i].intSpd/1048576
       }
+    }
       firebase.database().ref().child('db/-L46xegEleuKcTnJXDjA/sumInterface').set(sumInterface)
       firebase.database().ref().child('db/-L46xegEleuKcTnJXDjA/inbound').push(insertIn)
       firebase.database().ref().child('db/-L46xegEleuKcTnJXDjA/outbound').push(insertOut)
