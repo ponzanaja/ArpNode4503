@@ -430,6 +430,11 @@ function getMIB (nodeName, date, time) {
     }, 3000)
 
     setTimeout(() => {
+      let sumInterface = 0
+      for (let i = 64; i <= 67; i++) {
+         sumInterface += interfaceSpeed[i].intSpd/1048576
+      }
+      firebase.database().ref().child('db/-L46xegEleuKcTnJXDjA/sumInterface').set(sumInterface)
       firebase.database().ref().child('db/-L46xegEleuKcTnJXDjA/inbound').push(insertIn)
       firebase.database().ref().child('db/-L46xegEleuKcTnJXDjA/outbound').push(insertOut)
       firebase.database().ref().child('db/-L46xegEleuKcTnJXDjA/packetloss').set(packetloss)
@@ -469,10 +474,7 @@ function calculateUtilize (countInterface,interfaceSpeed,nodeName) {
   let inbound2 = 0
   let outbound1 = 0
   let outbound2 = 0
-  for (let i = 64; i <= 67; i++) {
-    sumInterface += interfaceSpeed[i].intSpd/1048576
-  }
-
+  
   let data =  dbInfo.find(info => info.node === nodeName)
    inbound1 = data.inbound[data.inbound.length-1].value
    inbound2 = data.inbound[data.inbound.length-2].value
