@@ -70,6 +70,7 @@ let temparatureSw = 0
 let cpu = 0
 let memory = 0
 let flagSend = false
+let iplist = []
 /// //////////////////// Network variable End here ///////////////////////
 
 /* ---------------------------------------------------------------------- */
